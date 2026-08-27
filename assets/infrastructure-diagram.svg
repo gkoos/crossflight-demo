@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Crossflight demo infrastructure diagram</title>
+  <desc id="desc">Traffic flows from the load generator to nginx, then to three API instances, which use Redis and call upstream when needed.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .box-title { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .box-text { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .lane { fill: #e2e8f0; }
+      .edge { stroke: #1f2937; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .edge-thin { stroke: #64748b; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .redis-edge { stroke: #b91c1c; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .group { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 18; }
+      .api { fill: #eff6ff; stroke: #3b82f6; stroke-width: 2; rx: 14; }
+      .redis { fill: #fef2f2; stroke: #ef4444; stroke-width: 2; rx: 14; }
+      .upstream { fill: #f0fdf4; stroke: #22c55e; stroke-width: 2; rx: 14; }
+      .client { fill: #fffbeb; stroke: #f59e0b; stroke-width: 2; rx: 14; }
+      .nginx { fill: #ecfeff; stroke: #06b6d4; stroke-width: 2; rx: 14; }
+      .note { font: 600 13px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="680" />
+
+  <text class="title" x="60" y="62">Crossflight Demo Infrastructure</text>
+  <text class="subtitle" x="60" y="92">One upstream call per hot key under concurrent load</text>
+
+  <rect class="group" x="40" y="120" width="1120" height="510" />
+
+  <rect class="client" x="80" y="220" width="220" height="120" />
+  <text class="box-title" x="110" y="266">Load Generator</text>
+  <text class="box-text" x="110" y="290">20 concurrent requests</text>
+  <text class="box-text" x="110" y="312">same product key</text>
+
+  <rect class="nginx" x="360" y="220" width="220" height="120" />
+  <text class="box-title" x="426" y="266">Nginx</text>
+  <text class="box-text" x="392" y="290">Round-robin balancer</text>
+  <text class="box-text" x="404" y="312">public port :3000</text>
+
+  <rect class="lane" x="640" y="160" width="280" height="360" rx="14" />
+  <text class="box-title" x="700" y="194">API Fleet</text>
+
+  <rect class="api" x="680" y="220" width="200" height="74" />
+  <text class="box-title" x="748" y="264">api_1</text>
+
+  <rect class="api" x="680" y="304" width="200" height="74" />
+  <text class="box-title" x="748" y="348">api_2</text>
+
+  <rect class="api" x="680" y="388" width="200" height="74" />
+  <text class="box-title" x="748" y="432">api_3</text>
+
+  <rect class="redis" x="960" y="220" width="170" height="120" />
+  <text class="box-title" x="1014" y="266">Redis</text>
+  <text class="box-text" x="985" y="290">cache + coordinator</text>
+
+  <rect class="upstream" x="960" y="390" width="170" height="120" />
+  <text class="box-title" x="997" y="436">Upstream API</text>
+  <text class="box-text" x="994" y="460">~500ms delay</text>
+
+  <path class="edge" d="M 300 280 L 360 280" />
+  <path class="edge" d="M 580 280 L 680 257" />
+  <path class="edge" d="M 580 280 L 680 341" />
+  <path class="edge" d="M 580 280 L 680 425" />
+
+  <path class="redis-edge" d="M 880 257 L 960 257" />
+  <path class="redis-edge" d="M 880 341 L 960 272" />
+  <path class="redis-edge" d="M 880 425 L 960 287" />
+
+  <path class="edge-thin" d="M 880 257 L 960 435" />
+  <path class="edge-thin" d="M 880 341 L 960 450" />
+  <path class="edge-thin" d="M 880 425 L 960 465" />
+
+  <text class="note" x="930" y="206">coordination + cache access</text>
+  <text class="note" x="929" y="372">cache miss loader calls</text>
+  <text class="note" x="72" y="598">Expected behavior: all concurrent responses share the same upstreamRequest id.</text>
+</svg>

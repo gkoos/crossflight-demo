@@ -6,10 +6,12 @@ Demonstrates [Crossflight](https://github.com/gkoos/crossflight), a cross-proces
 
 | Service | Role |
 | --- | --- |
-| `upstream` | Slow product API — 500ms artificial delay per request |
-| `redis` | Shared Redis — coordinator leases AND cache-manager backend |
+| `upstream` | Slow product API - 500ms artificial delay per request |
+| `redis` | Shared Redis - coordinator leases AND cache-manager backend |
 | `api_1`, `api_2`, `api_3` | Express API servers using Crossflight to coalesce misses |
-| `nginx` | Load balancer — round-robin across the three API instances on port 3000 |
+| `nginx` | Load balancer - round-robin across the three API instances on port 3000 |
+
+![Crossflight demo infrastructure diagram](assets/infrastructure-diagram.svg)
 
 ## How it works
 
