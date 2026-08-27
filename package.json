@@ -1,0 +1,24 @@
+{
+  "name": "crossflight-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Distributed cross-process cache stampede demo using crossflight from npm.",
+  "scripts": {
+    "up": "docker compose up --build",
+    "down": "docker compose down --remove-orphans",
+    "logs": "docker compose logs -f",
+    "load": "node --experimental-strip-types load/src/load.ts"
+  },
+  "dependencies": {
+    "cache-manager": "^5.7.6",
+    "cache-manager-ioredis-yet": "^2.1.1",
+    "crossflight": "^0.1.0",
+    "express": "^4.19.2",
+    "ioredis": "^5.6.0",
+    "undici": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

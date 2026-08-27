@@ -1,0 +1,85 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  upstream:
+    build:
+      context: .
+      dockerfile: upstream/Dockerfile
+    environment:
+      PORT: "3001"
+      DELAY_MS: "500"
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/product/1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api_1:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      REDIS_URL: "redis://redis:6379"
+      UPSTREAM_URL: "http://upstream:3001"
+      PORT: "3000"
+      TTL_MS: "10000"
+      INSTANCE_ID: "api_1"
+    depends_on:
+      redis:
+        condition: service_healthy
+      upstream:
+        condition: service_healthy
+
+  api_2:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      REDIS_URL: "redis://redis:6379"
+      UPSTREAM_URL: "http://upstream:3001"
+      PORT: "3000"
+      TTL_MS: "10000"
+      INSTANCE_ID: "api_2"
+    depends_on:
+      redis:
+        condition: service_healthy
+      upstream:
+        condition: service_healthy
+
+  api_3:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      REDIS_URL: "redis://redis:6379"
+      UPSTREAM_URL: "http://upstream:3001"
+      PORT: "3000"
+      TTL_MS: "10000"
+      INSTANCE_ID: "api_3"
+    depends_on:
+      redis:
+        condition: service_healthy
+      upstream:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api_1
+      - api_2
+      - api_3
+
