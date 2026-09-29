@@ -7,18 +7,26 @@
   "scripts": {
     "up": "docker compose up --build",
     "down": "docker compose down --remove-orphans",
-    "logs": "docker compose logs -f",
-    "load": "node --experimental-strip-types load/src/load.ts"
+    "logs": "docker compose logs -f --tail 50",
+    "logs:coordination": "docker compose logs -f --tail 50 api_1 api_2 api_3 upstream",
+    "logs:compact": "docker compose logs -f --tail 50 --no-log-prefix api_1 api_2 api_3 upstream",
+    "load": "node --experimental-strip-types load/src/load.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "cache-manager": "^5.7.6",
     "cache-manager-ioredis-yet": "^2.1.1",
-    "crossflight": "^0.1.0",
+    "crossflight": "^0.3.2",
     "express": "^4.19.2",
     "ioredis": "^5.6.0",
     "undici": "^7.0.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.25",
+    "@types/node": "^24.19.0",
+    "typescript": "^5.9.3"
   }
 }

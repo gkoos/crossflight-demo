@@ -1,0 +1,27 @@
+{
+  // The services run TypeScript directly: the containers start `node
+  // --experimental-strip-types`, so the types are stripped at startup and
+  // nothing is compiled here. This config exists for the editor and for
+  // `npm run typecheck` so api/ and load/ are checked the way they actually
+  // run: ES modules, modern libs, and Node's globals.
+  "compilerOptions": {
+    "target": "es2023",
+    "lib": ["es2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+
+    // Node's type stripping only erases types; reject anything it cannot run.
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+
+    // `import express from 'express'` (CommonJS package, ESM consumer).
+    "esModuleInterop": true,
+
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["api/src/**/*.ts", "load/src/**/*.ts", "upstream/src/**/*.ts"]
+}

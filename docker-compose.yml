@@ -19,7 +19,9 @@ services:
     ports:
       - "3001:3001"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3001/product/1"]
+      # /healthz never touches the upstream's call counter, so the number the
+      # load demo reports is always real product fetches and never a probe.
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/healthz"]
       interval: 5s
       timeout: 3s
       retries: 10

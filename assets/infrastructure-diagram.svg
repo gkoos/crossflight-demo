@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
   <title id="title">Crossflight demo infrastructure diagram</title>
-  <desc id="desc">Traffic flows from the load generator to nginx, then to three API instances, which use Redis and call upstream when needed.</desc>
+  <desc id="desc">Traffic flows from the load generator to nginx, then to three API instances, which use Redis and call upstream when needed. The load generator also reads the upstream's call counter and each instance's counters around every round.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937" />
@@ -77,5 +77,6 @@
 
   <text class="note" x="930" y="206">coordination + cache access</text>
   <text class="note" x="929" y="372">cache miss loader calls</text>
-  <text class="note" x="72" y="598">Expected behavior: all concurrent responses share the same upstreamRequest id.</text>
+  <text class="note" x="72" y="594">Measured, not inferred: the load demo reads the upstream's call counter and each instance's counters around every round.</text>
+  <text class="note" x="72" y="618">All concurrent responses share one upstreamCallId. The upstream counts GET /product/:id only - /healthz and /stats are free.</text>
 </svg>
